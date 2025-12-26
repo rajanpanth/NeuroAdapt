@@ -46,7 +46,7 @@ export function HeroSection() {
               Get Started
               <ArrowRight className="w-5 h-5" />
             </Button>
-            <Button variant="glass" size="xl">
+            <Button variant="glass" size="xl" onClick={() => window.open("https://www.youtube.com/watch?v=zAbaBhgNkQQ", "_blank")}>
               <Play className="w-5 h-5" />
               Watch Demo
             </Button>
