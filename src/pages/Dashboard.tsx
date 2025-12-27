@@ -1,126 +1,135 @@
-import { useNavigate } from 'react-router-dom';
-import { useDocuments } from '@/hooks/useDocuments';
-import { Header } from '@/components/layout/Header';
-import { DocumentCard } from '@/components/documents/DocumentCard';
-import { CreateDocumentCard } from '@/components/documents/CreateDocumentCard';
-import { toast } from '@/hooks/use-toast';
-import { FileText, Search } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { useState } from 'react';
+import { Helmet } from "react-helmet-async";
+import { useNavigate } from "react-router-dom";
+import { FileText, Table2, Presentation, ArrowLeft, Clock, Moon, Sun } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { useTheme } from "@/hooks/use-theme";
+import { useProductivity } from "@/hooks/use-productivity";
 
-const Dashboard = () => {
+const tools = [
+  {
+    id: "docs",
+    name: "NeuroDocs",
+    description: "Rich text document editor with formatting, export, and auto-save",
+    icon: FileText,
+    route: "/docs",
+    color: "from-blue-500 to-cyan-500",
+    features: ["Rich Text Editing", "PDF Export", "Auto-save"]
+  },
+  {
+    id: "sheets",
+    name: "NeuroSheets",
+    description: "Spreadsheet tool with formulas, cell formatting, and CSV support",
+    icon: Table2,
+    route: "/sheets",
+    color: "from-emerald-500 to-teal-500",
+    features: ["Formulas", "CSV Export", "Cell Formatting"]
+  },
+  {
+    id: "slides",
+    name: "NeuroSlides",
+    description: "Presentation builder with themes, animations, and fullscreen mode",
+    icon: Presentation,
+    route: "/slides",
+    color: "from-orange-500 to-rose-500",
+    features: ["Slide Builder", "Themes", "Present Mode"]
+  }
+];
+
+export default function Dashboard() {
   const navigate = useNavigate();
-  const { documents, createDocument, deleteDocument, isLoading } = useDocuments();
-  const [searchQuery, setSearchQuery] = useState('');
-
-  const handleCreate = () => {
-    const doc = createDocument();
-    navigate(`/document/${doc.id}`);
-    toast({
-      title: 'Document created',
-      description: 'Your new document is ready to edit.',
-    });
-  };
-
-  const handleOpen = (id: string) => {
-    navigate(`/document/${id}`);
-  };
-
-  const handleDelete = (id: string) => {
-    deleteDocument(id);
-    toast({
-      title: 'Document deleted',
-      description: 'The document has been permanently removed.',
-      variant: 'destructive',
-    });
-  };
-
-  const filteredDocuments = documents.filter(doc =>
-    doc.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const { theme, toggleTheme } = useTheme();
+  const { totalTime, formatTime } = useProductivity();
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header>
-        <div className="relative w-64 hidden md:block">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search documents..."
-            className="pl-9"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-      </Header>
+    <>
+      <Helmet>
+        <title>Dashboard | NeuroAdapt Office Suite</title>
+        <meta name="description" content="Choose your productivity tool - NeuroDocs, NeuroSheets, or NeuroSlides" />
+      </Helmet>
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
-        {/* Hero Section */}
-        <section className="mb-10">
-          <div className="bg-gradient-to-br from-primary/10 via-accent/20 to-background rounded-2xl p-8 md:p-12">
-            <div className="flex items-center gap-4 mb-4">
-              <div className="h-14 w-14 rounded-xl bg-primary flex items-center justify-center">
-                <FileText className="h-8 w-8 text-primary-foreground" />
-              </div>
+      <div className="min-h-screen bg-background">
+        {/* Header */}
+        <header className="border-b border-border/50 bg-background/80 backdrop-blur-sm sticky top-0 z-50">
+          <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Button variant="ghost" size="icon" onClick={() => navigate("/")}>
+                <ArrowLeft className="w-5 h-5" />
+              </Button>
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold">Welcome to Docs</h1>
-                <p className="text-muted-foreground">Create and edit documents with ease</p>
+                <h1 className="text-xl font-display font-bold">NeuroAdapt Office Suite</h1>
+                <p className="text-sm text-muted-foreground">Educational Demo</p>
               </div>
             </div>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Clock className="w-4 h-4" />
+                <span>Session: {formatTime(totalTime)}</span>
+              </div>
+              <Button variant="ghost" size="icon" onClick={toggleTheme}>
+                {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+              </Button>
+            </div>
           </div>
-        </section>
+        </header>
 
-        {/* Templates Section */}
-        <section className="mb-10">
-          <h2 className="text-lg font-semibold mb-4">Start a new document</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            <CreateDocumentCard onCreate={handleCreate} />
+        {/* Main Content */}
+        <main className="container mx-auto px-4 py-12">
+          <div className="text-center mb-12">
+            <Badge variant="outline" className="mb-4">
+              Choose Your Tool
+            </Badge>
+            <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">
+              What would you like to create?
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Select one of our burnout-aware productivity tools designed for focused, mindful work.
+            </p>
           </div>
-        </section>
 
-        {/* Recent Documents */}
-        <section>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold">Recent documents</h2>
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            {tools.map((tool) => (
+              <Card 
+                key={tool.id}
+                className="group cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-2 border-border/50 overflow-hidden"
+                onClick={() => navigate(tool.route)}
+              >
+                <div className={`h-2 bg-gradient-to-r ${tool.color}`} />
+                <CardHeader className="text-center pt-8">
+                  <div className={`w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br ${tool.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                    <tool.icon className="w-8 h-8 text-white" />
+                  </div>
+                  <CardTitle className="text-xl">{tool.name}</CardTitle>
+                  <CardDescription>{tool.description}</CardDescription>
+                </CardHeader>
+                <CardContent className="pb-8">
+                  <div className="flex flex-wrap gap-2 justify-center">
+                    {tool.features.map((feature) => (
+                      <Badge key={feature} variant="secondary" className="text-xs">
+                        {feature}
+                      </Badge>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
 
-          {isLoading ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-              {[...Array(4)].map((_, i) => (
-                <div key={i} className="aspect-[4/3] bg-muted/30 rounded-lg animate-pulse" />
-              ))}
-            </div>
-          ) : filteredDocuments.length > 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-              {filteredDocuments.map(doc => (
-                <DocumentCard
-                  key={doc.id}
-                  document={doc}
-                  onOpen={handleOpen}
-                  onDelete={handleDelete}
-                />
-              ))}
-            </div>
-          ) : documents.length === 0 ? (
-            <div className="text-center py-16 bg-card rounded-lg border border-dashed border-border">
-              <FileText className="h-12 w-12 mx-auto text-muted mb-4" />
-              <h3 className="font-medium mb-1">No documents yet</h3>
-              <p className="text-sm text-muted-foreground">
-                Create your first document to get started
-              </p>
-            </div>
-          ) : (
-            <div className="text-center py-16 bg-card rounded-lg border border-dashed border-border">
-              <Search className="h-12 w-12 mx-auto text-muted mb-4" />
-              <h3 className="font-medium mb-1">No matching documents</h3>
-              <p className="text-sm text-muted-foreground">
-                Try a different search term
-              </p>
-            </div>
-          )}
-        </section>
-      </main>
-    </div>
+          {/* Disclaimer */}
+          <div className="mt-16 text-center">
+            <Card className="max-w-2xl mx-auto bg-muted/30 border-border/50">
+              <CardContent className="py-6">
+                <p className="text-sm text-muted-foreground">
+                  <strong>Educational Demo:</strong> This project is for learning and demonstration purposes only. 
+                  It is not intended to replace or compete with Microsoft products. 
+                  All features are custom-built with original code.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </main>
+      </div>
+    </>
   );
-};
-
-export default Dashboard;
+}
