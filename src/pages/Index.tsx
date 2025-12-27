@@ -11,10 +11,9 @@ import { DashboardPreview } from "@/components/DashboardPreview";
 import { UseCasesSection } from "@/components/UseCasesSection";
 import { ImpactSection } from "@/components/ImpactSection";
 import { SecuritySection } from "@/components/SecuritySection";
-import { ScalabilitySection } from "@/components/ScalabilitySection";
+
 import { ImagineCupSection } from "@/components/ImagineCupSection";
-import { PitchDeckSection } from "@/components/PitchDeckSection";
-import { DemoSection } from "@/components/DemoSection";
+
 import { CTASection } from "@/components/CTASection";
 import { Footer } from "@/components/Footer";
 
@@ -67,10 +66,9 @@ const Index = () => {
           <UseCasesSection />
           <ImpactSection />
           <SecuritySection />
-          <ScalabilitySection />
+         
           <ImagineCupSection />
-          <PitchDeckSection />
-          <DemoSection />
+          
           <CTASection />
         </main>
         <Footer />
